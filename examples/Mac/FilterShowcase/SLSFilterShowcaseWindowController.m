@@ -47,10 +47,12 @@
     }
     
     currentlySelectedRow = newRowIndex;
-    
+    BOOL needsSecondImage = NO;
+
     if (currentlySelectedFilter != nil)
     {
         [inputCamera removeAllTargets];
+        [imageForBlending removeAllTargets];
         // Disconnect older filter before replacing with new one
         [currentlySelectedFilter removeAllTargets];
         currentlySelectedFilter = nil;
@@ -198,6 +200,73 @@
             self.currentSliderValue = 0.5;
             self.enableSlider = YES;
         }; break;
+        case GPUIMAGE_MASK:
+        {
+            currentlySelectedFilter = [[GPUImageMaskFilter alloc] init];
+            [(GPUImageFilter*)currentlySelectedFilter setBackgroundColorRed:0.0 green:1.0 blue:0.0 alpha:1.0];
+            self.enableSlider = NO;
+            needsSecondImage = YES;
+        }; break;
+        case GPUIMAGE_GAMMA:
+        {
+            currentlySelectedFilter = [[GPUImageGammaFilter alloc] init];
+            
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 3.0;
+            self.currentSliderValue = 1.0;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_TONECURVE:
+        {
+            currentlySelectedFilter = [[GPUImageToneCurveFilter alloc] init];
+            
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 0.5;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_HIGHLIGHTSHADOW:
+        {
+            currentlySelectedFilter = [[GPUImageHighlightShadowFilter alloc] init];
+            
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 1.0;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_HAZE:
+        {
+            currentlySelectedFilter = [[GPUImageHazeFilter alloc] init];
+            
+            self.minimumSliderValue = -0.2;
+            self.maximumSliderValue = 0.2;
+            self.currentSliderValue = 0.2;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_SEPIA:
+        {
+            currentlySelectedFilter = [[GPUImageSepiaFilter alloc] init];
+            
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 1.0;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_AMATORKA:
+        {
+            currentlySelectedFilter = [[GPUImageAmatorkaFilter alloc] init];
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_MISSETIKATE:
+        {
+            currentlySelectedFilter = [[GPUImageMissEtikateFilter alloc] init];
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_SOFTELEGANCE:
+        {
+            currentlySelectedFilter = [[GPUImageSoftEleganceFilter alloc] init];
+            self.enableSlider = NO;
+        }; break;
         case GPUIMAGE_GRAYSCALE:
         {
             currentlySelectedFilter = [[GPUImageGrayscaleFilter alloc] init];
@@ -313,10 +382,233 @@
             self.currentSliderValue = 1.0;
             self.enableSlider = YES;
         }; break;
+        case GPUIMAGE_DISSOLVE:
+        {
+            currentlySelectedFilter = [[GPUImageDissolveBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 0.5;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_CHROMAKEY:
+        {
+            currentlySelectedFilter = [[GPUImageChromaKeyBlendFilter alloc] init];
+            [(GPUImageChromaKeyBlendFilter *)currentlySelectedFilter setColorToReplaceRed:0.0 green:1.0 blue:0.0];
+
+            needsSecondImage = YES;
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 0.4;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_ADD:
+        {
+            currentlySelectedFilter = [[GPUImageAddBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_DIVIDE:
+        {
+            currentlySelectedFilter = [[GPUImageDivideBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_MULTIPLY:
+        {
+            currentlySelectedFilter = [[GPUImageMultiplyBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_OVERLAY:
+        {
+            currentlySelectedFilter = [[GPUImageOverlayBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_LIGHTEN:
+        {
+            currentlySelectedFilter = [[GPUImageLightenBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_DARKEN:
+        {
+            currentlySelectedFilter = [[GPUImageDarkenBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_COLORBURN:
+        {
+            currentlySelectedFilter = [[GPUImageColorBurnBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_COLORDODGE:
+        {
+            currentlySelectedFilter = [[GPUImageColorDodgeBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_LINEARBURN:
+        {
+            currentlySelectedFilter = [[GPUImageLinearBurnBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_SCREENBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageScreenBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_DIFFERENCEBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageDifferenceBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_SUBTRACTBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageSubtractBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_EXCLUSIONBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageExclusionBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_HARDLIGHTBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageHardLightBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_SOFTLIGHTBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageSoftLightBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_COLORBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageColorBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_HUEBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageHueBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_SATURATIONBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageSaturationBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_LUMINOSITYBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageLuminosityBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_NORMALBLEND:
+        {
+            currentlySelectedFilter = [[GPUImageNormalBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.enableSlider = NO;
+        }; break;
+        case GPUIMAGE_POISSONBLEND:
+        {
+            currentlySelectedFilter = [[GPUImagePoissonBlendFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 0.5;
+            self.enableSlider = YES;
+        }; break;
+        case GPUIMAGE_OPACITY:
+        {
+            currentlySelectedFilter = [[GPUImageOpacityFilter alloc] init];
+            
+            needsSecondImage = YES;
+            self.minimumSliderValue = 0.0;
+            self.maximumSliderValue = 1.0;
+            self.currentSliderValue = 1.0;
+            self.enableSlider = YES;
+        }; break;
     }
 
     [inputCamera addTarget:currentlySelectedFilter];
     [currentlySelectedFilter addTarget:self.glView];
+    
+    if (needsSecondImage)
+    {
+        if (imageForBlending == nil)
+        {
+            NSImage *inputImage;
+            
+            if (currentlySelectedRow == GPUIMAGE_MASK)
+            {
+                inputImage = [NSImage imageNamed:@"mask"];
+            }
+            /*
+             else if (filterType == GPUIMAGE_VORONOI) {
+             inputImage = [UIImage imageNamed:@"voroni_points.png"];
+             }*/
+            else {
+                // The picture is only used for two-image blend filters
+                inputImage = [NSImage imageNamed:@"Lambeau.jpg"];
+            }
+            
+            imageForBlending = [[GPUImagePicture alloc] initWithImage:inputImage smoothlyScaleOutput:YES];
+        }
+        [imageForBlending processImage];
+        [imageForBlending addTarget:currentlySelectedFilter];
+    }
+
+    //    if ( (filterType == GPUIMAGE_OPACITY) || (filterType == GPUIMAGE_CHROMAKEYNONBLEND) )
+    if (currentlySelectedRow == GPUIMAGE_OPACITY)
+    {
+        [currentlySelectedFilter removeTarget:self.glView];
+
+        [imageForBlending removeTarget:currentlySelectedFilter];
+        [inputCamera removeTarget:currentlySelectedFilter];
+        [inputCamera addTarget:currentlySelectedFilter];
+        
+        GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
+        blendFilter.mix = 1.0;
+        [imageForBlending addTarget:blendFilter];
+        [currentlySelectedFilter addTarget:blendFilter];
+        
+        [blendFilter addTarget:self.glView];
+    }
 }
 
 #pragma mark -
@@ -340,6 +632,11 @@
         case GPUIMAGE_HUE: [(GPUImageHueFilter *)currentlySelectedFilter setHue:_currentSliderValue]; break;
         case GPUIMAGE_WHITEBALANCE: [(GPUImageWhiteBalanceFilter *)currentlySelectedFilter setTemperature:_currentSliderValue]; break;
         case GPUIMAGE_MONOCHROME: [(GPUImageMonochromeFilter *)currentlySelectedFilter setIntensity:_currentSliderValue]; break;
+        case GPUIMAGE_GAMMA: [(GPUImageGammaFilter *)currentlySelectedFilter setGamma:_currentSliderValue]; break;
+        case GPUIMAGE_TONECURVE: [(GPUImageToneCurveFilter *)currentlySelectedFilter setBlueControlPoints:[NSArray arrayWithObjects:[NSValue valueWithPoint:NSMakePoint(0.0, 0.0)], [NSValue valueWithPoint:NSMakePoint(0.5, _currentSliderValue)], [NSValue valueWithPoint:NSMakePoint(1.0, 0.75)], nil]]; break;
+        case GPUIMAGE_HIGHLIGHTSHADOW: [(GPUImageHighlightShadowFilter *)currentlySelectedFilter setHighlights:_currentSliderValue]; break;
+        case GPUIMAGE_HAZE: [(GPUImageHazeFilter *)currentlySelectedFilter setDistance:_currentSliderValue]; break;
+        case GPUIMAGE_SEPIA: [(GPUImageSepiaFilter *)currentlySelectedFilter setIntensity:_currentSliderValue]; break;
         case GPUIMAGE_PIXELLATE: [(GPUImagePixellateFilter *)currentlySelectedFilter setFractionalWidthOfAPixel:_currentSliderValue]; break;
         case GPUIMAGE_KUWAHARA: [(GPUImageKuwaharaFilter *)currentlySelectedFilter setRadius:round(_currentSliderValue)]; break;
         case GPUIMAGE_SHARPEN: [(GPUImageSharpenFilter *)currentlySelectedFilter setSharpness:_currentSliderValue]; break;
@@ -363,6 +660,10 @@
         case GPUIMAGE_BILATERAL: [(GPUImageBilateralFilter *)currentlySelectedFilter setDistanceNormalizationFactor:_currentSliderValue]; break;
         case GPUIMAGE_MOTIONBLUR: [(GPUImageMotionBlurFilter *)currentlySelectedFilter setBlurAngle:_currentSliderValue]; break;
         case GPUIMAGE_ZOOMBLUR: [(GPUImageZoomBlurFilter *)currentlySelectedFilter setBlurSize:_currentSliderValue]; break;
+        case GPUIMAGE_DISSOLVE: [(GPUImageDissolveBlendFilter *)currentlySelectedFilter setMix:_currentSliderValue]; break;
+        case GPUIMAGE_CHROMAKEY: [(GPUImageChromaKeyBlendFilter *)currentlySelectedFilter setThresholdSensitivity:_currentSliderValue]; break;
+        case GPUIMAGE_POISSONBLEND: [(GPUImagePoissonBlendFilter *)currentlySelectedFilter setMix:_currentSliderValue]; break;
+        case GPUIMAGE_OPACITY:  [(GPUImageOpacityFilter *)currentlySelectedFilter setOpacity:_currentSliderValue]; break;
     }
 }
 
@@ -401,6 +702,15 @@
         case GPUIMAGE_TRANSFORM: tableRowTitle = @"Transform (2-D)"; break;
         case GPUIMAGE_TRANSFORM3D: tableRowTitle = @"Transform (3-D)"; break;
         case GPUIMAGE_CROP: tableRowTitle = @"Crop"; break;
+        case GPUIMAGE_MASK: tableRowTitle = @"Mask"; break;
+        case GPUIMAGE_GAMMA: tableRowTitle = @"Gamma"; break;
+        case GPUIMAGE_TONECURVE: tableRowTitle = @"Tone curve"; break;
+        case GPUIMAGE_HIGHLIGHTSHADOW: tableRowTitle = @"Highlights and shadows"; break;
+        case GPUIMAGE_HAZE: tableRowTitle = @"Haze"; break;
+        case GPUIMAGE_SEPIA: tableRowTitle = @"Sepia tone"; break;
+        case GPUIMAGE_AMATORKA: tableRowTitle = @"Amatorka (Lookup)"; break;
+        case GPUIMAGE_MISSETIKATE: tableRowTitle = @"Miss Etikate (Lookup)"; break;
+        case GPUIMAGE_SOFTELEGANCE: tableRowTitle = @"Soft elegance (Lookup)"; break;
         case GPUIMAGE_GAUSSIAN: tableRowTitle = @"Gaussian blur"; break;
         case GPUIMAGE_GAUSSIAN_SELECTIVE: tableRowTitle = @"Gaussian selective blur"; break;
         case GPUIMAGE_GAUSSIAN_POSITION: tableRowTitle = @"Gaussian (centered)"; break;
@@ -410,6 +720,30 @@
         case GPUIMAGE_BILATERAL: tableRowTitle = @"Bilateral blur"; break;
         case GPUIMAGE_MOTIONBLUR: tableRowTitle = @"Motion blur"; break;
         case GPUIMAGE_ZOOMBLUR: tableRowTitle = @"Zoom blur"; break;
+        case GPUIMAGE_DISSOLVE: tableRowTitle = @"Dissolve blend"; break;
+        case GPUIMAGE_CHROMAKEY: tableRowTitle = @"Chroma key blend (green)"; break;
+        case GPUIMAGE_ADD: tableRowTitle = @"Add blend"; break;
+        case GPUIMAGE_DIVIDE: tableRowTitle = @"Divide blend"; break;
+        case GPUIMAGE_MULTIPLY: tableRowTitle = @"Multiply blend"; break;
+        case GPUIMAGE_OVERLAY: tableRowTitle = @"Overlay blend"; break;
+        case GPUIMAGE_LIGHTEN: tableRowTitle = @"Lighten blend"; break;
+        case GPUIMAGE_DARKEN: tableRowTitle = @"Darken blend"; break;
+        case GPUIMAGE_COLORBURN: tableRowTitle = @"Color burn blend"; break;
+        case GPUIMAGE_COLORDODGE: tableRowTitle = @"Color dodge blend"; break;
+        case GPUIMAGE_LINEARBURN: tableRowTitle = @"Linear burn blend"; break;
+        case GPUIMAGE_SCREENBLEND: tableRowTitle = @"Screen blend"; break;
+        case GPUIMAGE_DIFFERENCEBLEND: tableRowTitle = @"Difference blend"; break;
+        case GPUIMAGE_SUBTRACTBLEND: tableRowTitle = @"Subtract blend"; break;
+        case GPUIMAGE_EXCLUSIONBLEND: tableRowTitle = @"Exclusion blend"; break;
+        case GPUIMAGE_HARDLIGHTBLEND: tableRowTitle = @"Hard light blend"; break;
+        case GPUIMAGE_SOFTLIGHTBLEND: tableRowTitle = @"Soft light blend"; break;
+        case GPUIMAGE_COLORBLEND: tableRowTitle = @"Color blend"; break;
+        case GPUIMAGE_HUEBLEND: tableRowTitle = @"Hue blend"; break;
+        case GPUIMAGE_SATURATIONBLEND: tableRowTitle = @"Saturation blend"; break;
+        case GPUIMAGE_LUMINOSITYBLEND: tableRowTitle = @"Luminosity blend"; break;
+        case GPUIMAGE_NORMALBLEND: tableRowTitle = @"Normal blend"; break;
+        case GPUIMAGE_POISSONBLEND: tableRowTitle = @"Poisson blend"; break;
+        case GPUIMAGE_OPACITY: tableRowTitle = @"Opacity adjustment"; break;
     }
 	
 	return tableRowTitle;

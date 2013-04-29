@@ -177,6 +177,26 @@
 #pragma mark -
 #pragma mark Image rendering
 
+- (void)initializeOutputTextureIfNeeded;
+{
+    runSynchronouslyOnVideoProcessingQueue(^{
+        if (!outputTexture)
+        {
+            [GPUImageContext useImageProcessingContext];
+            
+            glActiveTexture(GL_TEXTURE0);
+            glGenTextures(1, &outputTexture);
+            glBindTexture(GL_TEXTURE_2D, outputTexture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            // This is necessary for non-power-of-two textures
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+    });
+}
+
 - (void)removeAllTargets;
 {
     [super removeAllTargets];
@@ -191,15 +211,16 @@
     
     if (dispatch_semaphore_wait(imageUpdateSemaphore, DISPATCH_TIME_NOW) != 0)
     {
+        NSLog(@"Bailing on the image upload semaphore");
         return;
     }
     
     runAsynchronouslyOnVideoProcessingQueue(^{
         
-        if (MAX(pixelSizeOfImage.width, pixelSizeOfImage.height) > 1000.0)
-        {
-            [self conserveMemoryForNextFrame];
-        }
+//        if (MAX(pixelSizeOfImage.width, pixelSizeOfImage.height) > 1000.0)
+//        {
+//            [self conserveMemoryForNextFrame];
+//        }
         
         for (id<GPUImageInput> currentTarget in targets)
         {
